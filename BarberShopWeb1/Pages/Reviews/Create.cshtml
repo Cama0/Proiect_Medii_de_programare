@@ -1,0 +1,63 @@
+@page
+@model BarberShopWeb1.Pages.Reviews.CreateModel
+
+@{
+    ViewData["Title"] = "Lasă un Review";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card p-4 shadow" style="background-color: #1e1e1e; border: 1px solid #333;">
+                <h2 class="text-warning text-center mb-4">Lasă o Recenzie</h2>
+                
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Review.StylistID" class="control-label text-white">Frizerul</label>
+                        <select asp-for="Review.StylistID" class="form-control" asp-items="ViewBag.StylistID"></select>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Review.Rating" class="control-label text-white">Nota (1-5)</label>
+                        <select asp-for="Review.Rating" class="form-control">
+                            <option value="5">⭐⭐⭐⭐⭐ - Excelent</option>
+                            <option value="4">⭐⭐⭐⭐ - Foarte Bun</option>
+                            <option value="3">⭐⭐⭐ - Ok</option>
+                            <option value="2">⭐⭐ - Slab</option>
+                            <option value="1">⭐ - Foarte Slab</option>
+                        </select>
+                        <span asp-validation-for="Review.Rating" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Review.Comment" class="control-label text-white">Experiența ta</label>
+                        <textarea asp-for="Review.Comment" class="form-control" rows="4" placeholder="Spune-ne cum a fost tunsoarea..."></textarea>
+                        <span asp-validation-for="Review.Comment" class="text-danger"></span>
+                    </div>
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <div class="form-group mb-3 p-3 border border-warning rounded">
+                            <label asp-for="Review.MemberID" class="control-label text-warning">Selectează Membru (Admin)</label>
+                            <select asp-for="Review.MemberID" class="form-control" asp-items="ViewBag.MemberID"></select>
+                        </div>
+                    }
+
+                    <div class="form-group mt-4 text-center">
+                        <input type="submit" value="Publică Recenzia" class="btn btn-warning btn-lg font-weight-bold px-5" />
+                    </div>
+                </form>
+                
+                <div class="text-center mt-3">
+                    <a asp-page="/Stylists/Index" class="text-muted">Înapoi la Stiliști</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

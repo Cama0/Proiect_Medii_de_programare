@@ -1,0 +1,77 @@
+/* Fond întunecat pentru tot site-ul */
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+/* Link-urile standard */
+a {
+    color: #d4af37; /* Auriu */
+    text-decoration: none;
+}
+a:hover {
+    color: #f7d56e;
+    text-decoration: underline;
+}
+
+/* Bara de navigare (Meniu) */
+.navbar {
+    background-color: #000000 !important;
+    border-bottom: 2px solid #d4af37;
+}
+
+.navbar-brand {
+    color: #d4af37 !important;
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.nav-link {
+    color: #ffffff !important;
+}
+
+.nav-link:hover {
+    color: #d4af37 !important;
+}
+
+/* Butoanele Principale (Create/Save) */
+.btn-primary {
+    background-color: #d4af37;
+    border-color: #bfa145;
+    color: #000;
+    font-weight: bold;
+}
+
+.btn-primary:hover {
+    background-color: #f7d56e;
+    border-color: #d4af37;
+    color: #000;
+}
+
+/* Tabelele (Listele de stiliști etc.) */
+table {
+    background-color: #1e1e1e;
+    color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th {
+    background-color: #333333;
+    color: #d4af37; /* Capul de tabel auriu */
+}
+
+td {
+    border-color: #444 !important;
+    color: #ddd;
+}
+
+/* Footer */
+.footer {
+    background-color: #000000;
+    color: #888;
+    border-top: 1px solid #333;
+}

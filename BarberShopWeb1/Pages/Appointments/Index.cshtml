@@ -1,0 +1,65 @@
+@page
+@model BarberShopWeb1.Pages.Appointments.IndexModel
+
+@{
+    ViewData["Title"] = "Programări";
+}
+
+<div class="container p-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="display-4" style="color: #d4af37; font-weight: bold;">📅 Lista Programări</h1>
+        <a asp-page="Create" class="btn btn-primary btn-lg">
+            <i class="fa fa-plus"></i> Adaugă Programare
+        </a>
+    </div>
+
+    <div class="card shadow" style="background-color: #1e1e1e; border: 1px solid #333;">
+        <div class="card-body p-0">
+            <table class="table table-hover table-dark mb-0" style="background-color: transparent;">
+                <thead style="background-color: #000; border-bottom: 2px solid #d4af37;">
+                    <tr>
+                        <th class="p-3" style="color: #d4af37;">Data și Ora</th>
+                        <th class="p-3" style="color: #d4af37;">Frizer</th>
+                        <th class="p-3" style="color: #d4af37;">Serviciu</th>
+                        <th class="p-3" style="color: #d4af37;">Client</th>
+                        <th class="p-3 text-center" style="color: #d4af37;">Acțiuni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model.Appointment) {
+                    <tr>
+                        <td class="p-3 align-middle">
+                        <div style="font-weight: 500;">
+                            @item.Date.ToString("dd MMMM yyyy")
+                        </div>
+                        <div style="color: #d4af37; font-weight: bold; font-size: 1.1rem;">
+                            🕒 @item.Date.ToString("HH:mm")
+                        </div>
+                        </td>
+                        <td class="p-3 align-middle" style="font-weight: bold; color: #fff;">
+                            ✂️ @Html.DisplayFor(modelItem => item.Stylist.Name)
+                        </td>
+                        <td class="p-3 align-middle">
+                            @Html.DisplayFor(modelItem => item.Service.Name)
+                        </td>
+                        <td class="p-3 align-middle">
+                            👤 @item.Member.FirstName @item.Member.LastName
+                        </td>
+                        <td class="p-3 text-center align-middle">
+                            <div class="btn-group" role="group">
+                                <a asp-page="./Edit" asp-route-id="@item.ID" class="btn btn-sm btn-outline-warning" title="Modifică">
+                                    <i class="fa fa-edit"></i> Edit
+                                </a>
+
+                                <a asp-page="./Delete" asp-route-id="@item.ID" class="btn btn-sm btn-outline-danger" title="Anulează/Șterge">
+                                    <i class="fa fa-trash"></i> Șterge
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

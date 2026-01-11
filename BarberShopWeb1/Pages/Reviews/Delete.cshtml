@@ -1,0 +1,40 @@
+@page
+@model BarberShopWeb1.Pages.Reviews.DeleteModel
+
+@{
+    ViewData["Title"] = "Șterge Recenzie";
+}
+
+<div class="container mt-4">
+    <h3 class="text-danger">Ești sigur că vrei să ștergi această recenzie?</h3>
+    
+    <div class="card p-4 mt-3" style="background-color: #1e1e1e; border: 1px solid #dc3545;">
+        <dl class="row text-white">
+            <dt class="col-sm-2 text-muted">Client</dt>
+            <dd class="col-sm-10">
+                @(Model.Review.Member != null ? Model.Review.Member.FirstName + " " + Model.Review.Member.LastName : "Anonim")
+            </dd>
+
+            <dt class="col-sm-2 text-muted">Frizer</dt>
+            <dd class="col-sm-10">
+                @(Model.Review.Stylist != null ? Model.Review.Stylist.Name : "-")
+            </dd>
+
+            <dt class="col-sm-2 text-muted">Nota</dt>
+            <dd class="col-sm-10 text-warning font-weight-bold">
+                @Model.Review.Rating / 5
+            </dd>
+
+            <dt class="col-sm-2 text-muted">Comentariu</dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Review.Comment)
+            </dd>
+        </dl>
+        
+        <form method="post">
+            <input type="hidden" asp-for="Review.ID" />
+            <input type="submit" value="Șterge Definitiv" class="btn btn-danger" />
+            <a asp-page="./Index" class="btn btn-outline-light ml-2">Anulează</a>
+        </form>
+    </div>
+</div>

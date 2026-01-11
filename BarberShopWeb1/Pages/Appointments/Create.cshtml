@@ -1,0 +1,172 @@
+@page
+@model BarberShopWeb1.Pages.Appointments.CreateModel
+
+@{
+    ViewData["Title"] = "Programare Nouă";
+}
+
+<style>
+    .time-slot-btn {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        color: #333;
+        padding: 10px 15px;
+        margin: 5px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        transition: all 0.2s;
+    }
+    .time-slot-btn:hover {
+        background-color: #f8f9fa;
+        border-color: #d4af37;
+    }
+    .time-slot-btn.selected {
+        background-color: #d4af37; /* Auriu când e selectat */
+        color: #000;
+        border-color: #bfa145;
+    }
+    /* Săgeata mică din dreapta butonului (ca în poză) */
+    .time-slot-btn::after {
+        content: '>';
+        font-weight: bold;
+        color: #999;
+    }
+    .time-slot-btn.selected::after {
+        color: #000;
+    }
+</style>
+
+<div class="container mt-4">
+    <h1 class="text-warning">Fă o Programare</h1>
+    <hr style="background-color: #d4af37; height: 2px;" />
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card p-4 shadow" style="background-color: #1e1e1e; border: 1px solid #333;">
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Appointment.StylistID" class="control-label text-white">Alege Frizerul</label>
+                        <select asp-for="Appointment.StylistID" id="stylistSelect" class="form-control" asp-items="ViewBag.StylistID"></select>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="control-label text-white">Alege Ziua</label>
+                        <input type="date" id="dateSelect" class="form-control" />
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="control-label text-white">Ore Disponibile</label>
+                        <div id="timeSlotsContainer" class="p-2" style="background-color: #2a2a2a; min-height: 50px; border-radius: 5px;">
+                            <span class="text-muted small">Selectează un frizer și o dată pentru a vedea orele.</span>
+                        </div>
+                    </div>
+
+                    <input type="hidden" asp-for="Appointment.Date" id="finalDateTime" />
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <div class="form-group mb-3 p-3 border border-warning rounded">
+                            <label asp-for="Appointment.MemberID" class="control-label text-warning">Selectează Client</label>
+                            <select asp-for="Appointment.MemberID" class="form-control" asp-items="ViewBag.MemberID"></select>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="p-3 mb-3 rounded" style="background-color: #2a2a2a; border-left: 4px solid #d4af37;">
+                            <h5 class="text-white mb-3">Datele Tale</h5>
+                            <div class="form-group mb-2"><label class="text-muted">Prenume</label><input asp-for="InputMember.FirstName" class="form-control" required /></div>
+                            <div class="form-group mb-2"><label class="text-muted">Nume</label><input asp-for="InputMember.LastName" class="form-control" required /></div>
+                            <div class="form-group mb-2"><label class="text-muted">Telefon</label><input asp-for="InputMember.Phone" class="form-control" required /></div>
+                        </div>
+                    }
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Appointment.ServiceID" class="control-label text-white">Serviciu</label>
+                        <select asp-for="Appointment.ServiceID" class="form-control" asp-items="ViewBag.ServiceID"></select>
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <input type="submit" value="Confirmă Programarea" id="submitBtn" class="btn btn-warning btn-lg w-100 font-weight-bold" disabled />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        // Așteptăm ca pagina să se încarce
+        document.addEventListener('DOMContentLoaded', function () {
+            const stylistSelect = document.getElementById('stylistSelect');
+            const dateSelect = document.getElementById('dateSelect');
+            const slotsContainer = document.getElementById('timeSlotsContainer');
+            const finalInput = document.getElementById('finalDateTime');
+            const submitBtn = document.getElementById('submitBtn');
+
+            // Setăm data minimă la "azi"
+            dateSelect.min = new Date().toISOString().split("T")[0];
+
+            // Funcția care cere orele de la server
+            function loadTimeSlots() {
+                const date = dateSelect.value;
+                const stylistId = stylistSelect.value;
+
+                if (!date || !stylistId) return;
+
+                slotsContainer.innerHTML = '<div class="text-white">Se încarcă orele...</div>';
+                submitBtn.disabled = true; // Dezactivăm butonul până alege o oră
+
+                // Apelăm metoda OnGetTimeSlots din C#
+                fetch(`Create?handler=TimeSlots&date=${date}&stylistId=${stylistId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        slotsContainer.innerHTML = '';
+                        if (data.length === 0) {
+                            slotsContainer.innerHTML = '<div class="text-danger">Nu sunt locuri libere în această zi.</div>';
+                        } else {
+                            // Pentru fiecare oră liberă, creăm un buton
+                            data.forEach(time => {
+                                const btn = document.createElement('div');
+                                btn.className = 'time-slot-btn';
+                                btn.textContent = time; // ex: 09:30
+                                btn.onclick = function() {
+                                    selectTime(this, time);
+                                };
+                                slotsContainer.appendChild(btn);
+                            });
+                        }
+                    });
+            }
+
+            // Funcția care rulează când dai click pe o oră
+            function selectTime(btnElement, timeString) {
+                // 1. Vizual: scoatem selecția de pe celelalte și o punem pe asta
+                document.querySelectorAll('.time-slot-btn').forEach(b => b.classList.remove('selected'));
+                btnElement.classList.add('selected');
+
+                // 2. Logic: Combinăm Ziua + Ora și o punem în input-ul ascuns
+                const datePart = dateSelect.value; // "2024-01-20"
+                const fullDateTime = `${datePart}T${timeString}:00`; // "2024-01-20T09:30:00"
+                
+                finalInput.value = fullDateTime;
+                
+                // 3. Activăm butonul de submit
+                submitBtn.disabled = false;
+            }
+
+            // Ascultăm schimbările la dată sau frizer
+            stylistSelect.addEventListener('change', loadTimeSlots);
+            dateSelect.addEventListener('change', loadTimeSlots);
+        });
+    </script>
+}

@@ -1,0 +1,59 @@
+@page
+@model BarberShopWeb1.Pages.Reviews.EditModel
+
+@{
+    ViewData["Title"] = "Editează Recenzie";
+}
+
+<div class="container mt-4">
+    <h2 class="text-warning">Editează Recenzia</h2>
+    <hr style="background-color: #d4af37;" />
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card p-4 shadow" style="background-color: #1e1e1e;">
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Review.ID" />
+                    <input type="hidden" asp-for="Review.MemberID" />
+                    <input type="hidden" asp-for="Review.StylistID" />
+
+                    <div class="form-group mb-3">
+                        <label class="text-white">Nota</label>
+                        <select asp-for="Review.Rating" class="form-control">
+                            <option value="5">⭐⭐⭐⭐⭐ (5)</option>
+                            <option value="4">⭐⭐⭐⭐ (4)</option>
+                            <option value="3">⭐⭐⭐ (3)</option>
+                            <option value="2">⭐⭐ (2)</option>
+                            <option value="1">⭐ (1)</option>
+                        </select>
+                        <span asp-validation-for="Review.Rating" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Review.Comment" class="control-label text-white">Comentariu</label>
+                        <textarea asp-for="Review.Comment" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Review.Comment" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label class="text-muted small">Frizer (Nu se poate modifica)</label>
+                        <input type="text" class="form-control" value="@ViewData["StylistName"]" disabled style="background-color: #2a2a2a; color: #fff;" />
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Salvează Modificările" class="btn btn-warning w-100" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a asp-page="./Index" class="text-white">Înapoi la listă</a>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

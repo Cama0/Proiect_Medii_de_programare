@@ -1,0 +1,134 @@
+@page
+@model BarberShopWeb1.Pages.Appointments.EditModel
+
+@{
+    ViewData["Title"] = "Modifică Programare";
+}
+
+<style>
+    .time-slot-btn {
+        background-color: #fff; border: 1px solid #ddd; color: #333;
+        padding: 10px 15px; margin: 5px; border-radius: 5px;
+        cursor: pointer; font-weight: bold; display: flex;
+        justify-content: space-between; align-items: center; width: 100%;
+    }
+    .time-slot-btn:hover { background-color: #f8f9fa; border-color: #d4af37; }
+    .time-slot-btn.selected { background-color: #d4af37; color: #000; border-color: #bfa145; }
+    .time-slot-btn.current-time { border: 2px dashed #d4af37; background-color: #fff8e1; } /* Stil pt ora curentă */
+</style>
+
+<div class="container mt-4">
+    <h1 class="text-warning">Modifică Programarea</h1>
+    <hr style="background-color: #d4af37; height: 2px;" />
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card p-4 shadow" style="background-color: #1e1e1e; border: 1px solid #333;">
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Appointment.ID" />
+                    <input type="hidden" asp-for="Appointment.MemberID" />
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Appointment.StylistID" class="control-label text-white">Frizer</label>
+                        <select asp-for="Appointment.StylistID" id="stylistSelect" class="form-control" asp-items="ViewBag.StylistID"></select>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="control-label text-white">Data</label>
+                        <input type="date" id="dateSelect" class="form-control" 
+                               value="@Model.Appointment.Date.ToString("yyyy-MM-dd")" />
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="control-label text-white">Modifică Ora</label>
+                        <div id="timeSlotsContainer" class="p-2" style="background-color: #2a2a2a; min-height: 50px; border-radius: 5px;">
+                            <span class="text-muted small">Se încarcă orarul...</span>
+                        </div>
+                    </div>
+
+                    <input type="hidden" asp-for="Appointment.Date" id="finalDateTime" value="@Model.Appointment.Date.ToString("yyyy-MM-ddTHH:mm:00")" />
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <div class="form-group mb-3 p-3 border border-warning rounded">
+                            <label asp-for="Appointment.MemberID" class="control-label text-warning">Client (Admin Only)</label>
+                            <select asp-for="Appointment.MemberID" class="form-control" asp-items="ViewBag.MemberID"></select>
+                        </div>
+                    }
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Appointment.ServiceID" class="control-label text-white">Serviciu</label>
+                        <select asp-for="Appointment.ServiceID" class="form-control" asp-items="ViewBag.ServiceID"></select>
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <input type="submit" value="Salvează Modificările" class="btn btn-warning btn-lg w-100 font-weight-bold" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const stylistSelect = document.getElementById('stylistSelect');
+            const dateSelect = document.getElementById('dateSelect');
+            const slotsContainer = document.getElementById('timeSlotsContainer');
+            const finalInput = document.getElementById('finalDateTime');
+
+            // Data și Ora originale ale programării (pentru a le evidenția)
+            const originalDateFull = "@Model.Appointment.Date.ToString("yyyy-MM-ddTHH:mm:00")";
+            const originalTime = "@Model.Appointment.Date.ToString("HH:mm")";
+
+            function loadTimeSlots() {
+                const date = dateSelect.value;
+                const stylistId = stylistSelect.value;
+                if (!date || !stylistId) return;
+
+                fetch(`Edit?handler=TimeSlots&date=${date}&stylistId=${stylistId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        slotsContainer.innerHTML = '';
+                        
+                        // Dacă suntem pe data originală, adăugăm manual ora originală în listă (chiar dacă e ocupată de noi)
+                        // Backend-ul a exclus deja ID-ul curent, deci ar trebui să vină liberă, 
+                        // dar ne asigurăm vizual.
+                        
+                        if (data.length === 0) {
+                            slotsContainer.innerHTML = '<div class="text-danger">Nicio oră liberă.</div>';
+                        } else {
+                            data.forEach(time => {
+                                const btn = document.createElement('div');
+                                btn.className = 'time-slot-btn';
+                                btn.textContent = time;
+
+                                // Dacă e chiar ora curentă selectată
+                                if (date === originalDateFull.split('T')[0] && time === originalTime) {
+                                    btn.classList.add('selected');
+                                    btn.innerHTML += ' (Ora Curentă)';
+                                }
+
+                                btn.onclick = function() {
+                                    document.querySelectorAll('.time-slot-btn').forEach(b => b.classList.remove('selected'));
+                                    this.classList.add('selected');
+                                    finalInput.value = `${date}T${time}:00`;
+                                };
+                                slotsContainer.appendChild(btn);
+                            });
+                        }
+                    });
+            }
+
+            // Încărcăm orele imediat ce intrăm pe pagină
+            loadTimeSlots();
+
+            stylistSelect.addEventListener('change', loadTimeSlots);
+            dateSelect.addEventListener('change', loadTimeSlots);
+        });
+    </script>
+}

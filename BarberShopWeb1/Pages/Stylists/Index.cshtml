@@ -1,0 +1,92 @@
+@page
+@model BarberShopWeb1.Pages.Stylists.IndexModel
+
+@{
+    ViewData["Title"] = "Echipa Noastră";
+    var images = new List<string> {
+        "https://images.unsplash.com/photo-1622286342621-4bd786c2447c?q=80&w=2070&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?q=80&w=2074&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1621605815971-fbc98d665033?q=80&w=2070&auto=format&fit=crop"
+    };
+    int imgIndex = 0;
+}
+
+<div class="container py-4">
+    <div class="text-center mb-5">
+        <h1 class="display-4 font-weight-bold text-white">ECHIPA <span style="color: #d4af37;">BARBER SHOP</span></h1>
+        <p class="text-muted">Alege expertul potrivit pentru stilul tău.</p>
+    </div>
+
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="text-center mb-4">
+            <a asp-page="Create" class="btn btn-outline-warning">Adaugă Stilist Nou</a>
+        </div>
+    }
+
+    <div class="row g-4">
+        @foreach (var item in Model.Stylist) {
+            string currentImage = images[imgIndex % images.Count];
+            imgIndex++;
+
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm border-0" style="background-color: #1e1e1e;">
+                    
+                    <div style="height: 300px; overflow: hidden; border-bottom: 4px solid #d4af37;">
+                        <img src="@currentImage" class="w-100 h-100" style="object-fit: cover;" alt="Barber">
+                    </div>
+
+                    <div class="card-body text-center p-4">
+                        <h3 class="card-title text-white mb-1">@item.Name</h3>
+
+                        <p class="text-warning small text-uppercase mb-2">
+                            @(string.IsNullOrEmpty(item.Specialization) ? "Master Barber" : item.Specialization)
+                        </p>
+
+                        <div class="mb-3">
+                            @{
+                                var reviewCount = item.Reviews != null ? item.Reviews.Count : 0;
+                                double average = reviewCount > 0 ? item.Reviews.Average(r => r.Rating) : 0;
+                            }
+
+                            @if (reviewCount > 0)
+                            {
+                                <span class="text-white font-weight-bold" style="font-size: 1.1rem;">
+                                    @average.ToString("0.0")
+                                </span>
+                                <span class="text-warning">★</span>
+                                <span class="text-muted small">(@reviewCount recenzii)</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted small font-italic">Nicio recenzie încă</span>
+                            }
+                        </div>
+
+                        <p class="text-muted small">
+                            Expert în tunsori clasice, fade-uri moderne și îngrijirea bărbii.
+                        </p>
+                    </div>
+
+                    <div class="card-footer bg-transparent border-0 p-4 pt-0">
+                        <div class="d-grid gap-2">
+                            <a asp-page="/Appointments/Create" class="btn btn-primary font-weight-bold">REZERVĂ ACUM</a>
+
+                            <a href="/Reviews/Create?stylistId=@item.ID" class="btn btn-light btn-sm">
+                                ⭐ Lasă un Review
+                            </a>
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <div class="mt-2">
+                                    <a asp-page="./Edit" asp-route-id="@item.ID" class="text-muted small mx-2">Edit</a>
+                                    <a asp-page="./Delete" asp-route-id="@item.ID" class="text-danger small mx-2">Delete</a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

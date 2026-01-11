@@ -1,0 +1,56 @@
+@page
+@model BarberShopWeb1.Pages.Reviews.IndexModel
+
+@{
+    ViewData["Title"] = "Gestiune Recenzii";
+}
+
+<div class="container py-4">
+    <h1 class="text-warning mb-4">💬 Feedback de la Clienți</h1>
+
+    @if (!Model.Review.Any())
+    {
+        <div class="alert alert-dark text-center">
+            Momentan nu există recenzii înregistrate.
+        </div>
+    }
+
+    <div class="row">
+        @foreach (var item in Model.Review) {
+            <div class="col-md-6 mb-4">
+                <div class="card border-0 h-100 shadow" style="background-color: #2a2a2a;">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="card-title text-white mb-0">
+                                <i class="fa fa-user text-muted mr-2"></i>
+                                @(item.Member != null ? item.Member.FirstName + " " + item.Member.LastName : "Anonim")
+                            </h5>
+                            
+                            <div class="text-warning" style="font-size: 1.2rem;">
+                                @for(int i=0; i < item.Rating; i++) { <span>★</span> }
+                                @for(int i=item.Rating; i < 5; i++) { <span class="text-muted">☆</span> }
+                            </div>
+                        </div>
+
+                        <p class="text-muted small mb-2">
+                            Review pentru: <span class="text-info font-weight-bold">@(item.Stylist != null ? item.Stylist.Name : "Nespecificat")</span>
+                        </p>
+                        
+                        <div class="p-3 rounded" style="background-color: #1e1e1e; font-style: italic; color: #ddd;">
+                            " @item.Comment "
+                        </div>
+                    </div>
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <div class="card-footer bg-transparent border-top border-secondary text-right">
+                            <a asp-page="./Delete" asp-route-id="@item.ID" class="btn btn-sm btn-outline-danger">
+                                <i class="fa fa-trash"></i> Șterge
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>

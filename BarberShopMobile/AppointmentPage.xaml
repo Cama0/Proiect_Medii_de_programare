@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BarberShopMobile.AppointmentPage"
+             BackgroundColor="#1e1e1e"
+             Title="Programare Nouă">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Padding="20">
+            
+            <Label Text="Frizer Selectat:" TextColor="#d4af37" FontSize="18"/>
+            <Label x:Name="LabelStylistName" TextColor="White" FontSize="24" FontAttributes="Bold"/>
+
+            <BoxView HeightRequest="1" Color="#333" />
+
+            <Label Text="Numele Tău:" TextColor="#d4af37"/>
+            <Entry x:Name="EntryName" Placeholder="ex: Ion Popescu" TextColor="White" PlaceholderColor="#666"/>
+
+            <Label Text="Telefon:" TextColor="#d4af37"/>
+            <Entry x:Name="EntryPhone" Keyboard="Telephone" Placeholder="07xx..." TextColor="White" PlaceholderColor="#666"/>
+
+            <Label Text="Data și Ora:" TextColor="#d4af37"/>
+            <DatePicker x:Name="PickerDate" MinimumDate="01/01/2024" TextColor="White" Format="dd/MM/yyyy"/>
+            <TimePicker x:Name="PickerTime" TextColor="White" Format="HH:mm"/>
+
+            <Label Text="Alege Serviciul:" TextColor="#d4af37" Margin="0,10,0,0"/>
+            <Picker x:Name="PickerService"
+                Title="Selectează serviciul"
+                TextColor="White"
+                TitleColor="#666"
+                ItemDisplayBinding="{Binding Name}" />
+
+            <Button Text="CONFIRMĂ PROGRAMAREA"
+                    BackgroundColor="#d4af37"
+                    TextColor="Black"
+                    FontAttributes="Bold"
+                    HeightRequest="50"
+                    Margin="0,30,0,0"
+                    Clicked="OnConfirmClicked"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

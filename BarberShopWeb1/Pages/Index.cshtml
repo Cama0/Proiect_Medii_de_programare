@@ -1,0 +1,81 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="hero-section text-center text-white d-flex align-items-center justify-content-center" 
+     style="background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1585747860715-2ba37e788b70?q=80&w=2074&auto=format&fit=crop'); 
+            background-size: cover; 
+            background-position: center; 
+            height: 80vh; 
+            margin-top: -20px; /* Anulează marginile containerului standard */
+            border-bottom: 4px solid #d4af37;">
+    
+    <div class="container">
+        <h5 class="text-uppercase letter-spacing-2" style="color: #d4af37; letter-spacing: 3px;">Since 2024</h5>
+        <h1 class="display-1 fw-bold mb-4">GENTLEMAN'S <span style="color: #d4af37;">BARBER</span></h1>
+        <p class="lead mb-5" style="max-width: 600px; margin: 0 auto; color: #ccc;">
+            Nu este doar un tuns, este o experiență. Stil clasic, precizie modernă și o atmosferă dedicată bărbaților care se respectă.
+        </p>
+        <a href="/Appointments/Create" class="btn btn-primary btn-lg px-5 py-3" style="font-size: 1.2rem; border-radius: 0;">
+            RESERVĂ UN LOC
+        </a>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h2 class="display-5 fw-bold" style="color: #d4af37;">SERVICIILE NOASTRE</h2>
+        <p class="text-muted">Alege experiența care ți se potrivește</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4 shadow-sm" style="background-color: #1e1e1e; border: 1px solid #333; transition: transform 0.3s;">
+                <div class="display-4 mb-3">✂️</div>
+                <h3 class="h4 text-white">Haircut & Styling</h3>
+                <p class="text-muted">Consiliere, spălat, tuns și styling cu produse premium.</p>
+                <h5 style="color: #d4af37;">50 RON</h5>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4 shadow-sm" style="background-color: #1e1e1e; border: 1px solid #333; transition: transform 0.3s;">
+                <div class="display-4 mb-3">🪒</div>
+                <h3 class="h4 text-white">Beard Trim</h3>
+                <p class="text-muted">Contur cu briciul, aranjare din foarfecă și tratament cu ulei cald.</p>
+                <h5 style="color: #d4af37;">30 RON</h5>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4 shadow-sm" style="background-color: #1e1e1e; border: 1px solid #333; transition: transform 0.3s;">
+                <div class="display-4 mb-3">🥃</div>
+                <h3 class="h4 text-white">The Full Experience</h3>
+                <p class="text-muted">Tuns + Barbă + Masaj capilar + Băutură din partea casei.</p>
+                <h5 style="color: #d4af37;">75 RON</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid py-5" style="background-color: #121212; border-top: 1px solid #333;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6 mb-4 mb-md-0">
+                <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?q=80&w=2070&auto=format&fit=crop" 
+                     class="img-fluid rounded shadow" style="border: 2px solid #d4af37;" alt="Barber working">
+            </div>
+            <div class="col-md-6 ps-md-5">
+                <h2 style="color: #d4af37;">MAEȘTRII STILULUI</h2>
+                <h4 class="text-white mb-3">Profesionalism și Pasiune</h4>
+                <p class="text-muted mb-4">
+                    Echipa noastră este formată din stiliști cu experiență care înțeleg geometria feței și stilul personal. 
+                    Folosim doar produse de top și echipamente sterilizate pentru siguranța ta.
+                </p>
+                <a href="/Stylists/Index" class="btn btn-outline-light rounded-0">VEZI ECHIPA</a>
+            </div>
+        </div>
+    </div>
+</div>
