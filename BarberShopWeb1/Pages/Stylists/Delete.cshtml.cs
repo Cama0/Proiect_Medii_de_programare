@@ -50,24 +50,20 @@ namespace BarberShopWeb1.Pages.Stylists
             {
                 return NotFound();
             }
-
-            // 1. Găsim Stilistul
+            
             var stylist = await _context.Stylist.FindAsync(id);
 
             if (stylist != null)
             {
-                // 2. Găsim TOATE programările acestui stilist
                 var appointments = _context.Appointment
                     .Where(a => a.StylistID == id)
                     .ToList();
-
-                // 3. Le ștergem mai întâi pe ele (Ca să nu mai avem eroarea Foreign Key)
+                
                 if (appointments.Any())
                 {
                     _context.Appointment.RemoveRange(appointments);
                 }
-
-                // 4. Acum putem șterge liniștit stilistul
+                
                 Stylist = stylist;
                 _context.Stylist.Remove(Stylist);
         

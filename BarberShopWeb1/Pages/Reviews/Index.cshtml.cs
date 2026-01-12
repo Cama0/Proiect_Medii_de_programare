@@ -19,7 +19,6 @@ namespace BarberShopWeb1.Pages.Reviews
 
         public async Task OnGetAsync()
         {
-            // Aducem Review-urile ÎMPREUNĂ cu Stylist și Member (Include)
             Review = await _context.Review
                 .Include(r => r.Stylist)
                 .Include(r => r.Member)

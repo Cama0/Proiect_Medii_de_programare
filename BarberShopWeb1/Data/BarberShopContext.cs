@@ -1,10 +1,9 @@
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore; // <--- ACEASTA ESTE LINIA CRITICĂ
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using BarberShopWeb1.Models;
 
 namespace BarberShopWeb1.Data
 {
-    // Trebuie să moștenească din IdentityDbContext, nu DbContext
     public class BarberShopContext : IdentityDbContext
     {
         public BarberShopContext(DbContextOptions<BarberShopContext> options)

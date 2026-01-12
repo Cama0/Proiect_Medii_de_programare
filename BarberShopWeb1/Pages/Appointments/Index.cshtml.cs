@@ -23,24 +23,21 @@ namespace BarberShopWeb1.Pages.Appointments
 
         public async Task OnGetAsync()
         {
-            // Construim interogarea de bază și includem toate datele necesare
             var query = _context.Appointment
                 .Include(a => a.Stylist)
                 .Include(a => a.Service)
-                .Include(a => a.Member) // <--- CRITIC: Trebuie să aducem datele despre membru
-                .OrderByDescending(a => a.Date) // Le ordonăm cronologic (cele mai noi sus)
+                .Include(a => a.Member) 
+                .OrderByDescending(a => a.Date) 
                 .AsQueryable();
-
-            // --- FILTRARE DE SECURITATE ---
+            
             if (!User.IsInRole("Admin"))
             {
-                // Varianta Robustă: Filtrăm direct după emailul din tabela Member asociată programării
+                
                 var userEmail = User.Identity.Name;
                 
                 query = query.Where(a => a.Member.Email == userEmail);
             }
             
-            // Executăm interogarea
             Appointment = await query.ToListAsync();
         }
     }

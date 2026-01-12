@@ -25,20 +25,17 @@ namespace BarberShopWeb1.Pages.Appointments
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null) return NotFound();
-
-            // 1. Aducem programarea cu membrul
+            
             var appointment = await _context.Appointment
-                .Include(a => a.Member) // <--- Include
+                .Include(a => a.Member) 
                 .Include(a => a.Service)
                 .Include(a => a.Stylist)
                 .FirstOrDefaultAsync(m => m.ID == id);
 
             if (appointment == null) return NotFound();
-
-            // --- 2. VERIFICARE SECURITATE ---
+            
             if (!User.IsInRole("Admin"))
             {
-                // Verificăm dacă programarea îi aparține
                 if (appointment.Member.Email != User.Identity.Name)
                 {
                     return Forbid();

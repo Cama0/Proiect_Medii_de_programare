@@ -20,9 +20,7 @@ namespace BarberShopWeb1.Controllers
         public async Task<IActionResult> CreateAppointment([FromBody] AppointmentRequest request)
         {
             if (request == null) return BadRequest("Date invalide.");
-
-            // --- VERIFICARE CONFLICT (NOU) ---
-            // Presupunem că o tunsoare durează 30 minute
+            
             DateTime start = request.Date;
             DateTime end = start.AddMinutes(30);
 
@@ -35,9 +33,7 @@ namespace BarberShopWeb1.Controllers
             {
                 return BadRequest("Acest interval orar este deja ocupat.");
             }
-            // ---------------------------------
-
-            // Căutăm sau creăm clientul (Codul vechi...)
+            
             var member = await _context.Member.FirstOrDefaultAsync(m => m.Phone == request.Phone);
 
             if (member == null)
@@ -52,8 +48,7 @@ namespace BarberShopWeb1.Controllers
                 _context.Member.Add(member);
                 await _context.SaveChangesAsync();
             }
-
-            // Creăm programarea (Codul vechi...)
+            
             var appointment = new Appointment
             {
                 StylistID = request.StylistID,
@@ -69,7 +64,7 @@ namespace BarberShopWeb1.Controllers
         }
     }
 
-    // Aceasta este o clasă "plic" (DTO) doar pentru transferul de date de la mobil
+    
     public class AppointmentRequest
     {
         public int StylistID { get; set; }

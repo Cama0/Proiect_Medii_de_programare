@@ -26,11 +26,11 @@
         border-color: #d4af37;
     }
     .time-slot-btn.selected {
-        background-color: #d4af37; /* Auriu când e selectat */
+        background-color: #d4af37; 
         color: #000;
         border-color: #bfa145;
     }
-    /* Săgeata mică din dreapta butonului (ca în poză) */
+    
     .time-slot-btn::after {
         content: '>';
         font-weight: bold;
@@ -105,7 +105,7 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script>
-        // Așteptăm ca pagina să se încarce
+        
         document.addEventListener('DOMContentLoaded', function () {
             const stylistSelect = document.getElementById('stylistSelect');
             const dateSelect = document.getElementById('dateSelect');
@@ -113,10 +113,10 @@
             const finalInput = document.getElementById('finalDateTime');
             const submitBtn = document.getElementById('submitBtn');
 
-            // Setăm data minimă la "azi"
+            
             dateSelect.min = new Date().toISOString().split("T")[0];
 
-            // Funcția care cere orele de la server
+            
             function loadTimeSlots() {
                 const date = dateSelect.value;
                 const stylistId = stylistSelect.value;
@@ -124,9 +124,9 @@
                 if (!date || !stylistId) return;
 
                 slotsContainer.innerHTML = '<div class="text-white">Se încarcă orele...</div>';
-                submitBtn.disabled = true; // Dezactivăm butonul până alege o oră
+                submitBtn.disabled = true; 
 
-                // Apelăm metoda OnGetTimeSlots din C#
+                
                 fetch(`Create?handler=TimeSlots&date=${date}&stylistId=${stylistId}`)
                     .then(response => response.json())
                     .then(data => {
@@ -134,11 +134,10 @@
                         if (data.length === 0) {
                             slotsContainer.innerHTML = '<div class="text-danger">Nu sunt locuri libere în această zi.</div>';
                         } else {
-                            // Pentru fiecare oră liberă, creăm un buton
                             data.forEach(time => {
                                 const btn = document.createElement('div');
                                 btn.className = 'time-slot-btn';
-                                btn.textContent = time; // ex: 09:30
+                                btn.textContent = time; 
                                 btn.onclick = function() {
                                     selectTime(this, time);
                                 };
@@ -148,23 +147,22 @@
                     });
             }
 
-            // Funcția care rulează când dai click pe o oră
+            
             function selectTime(btnElement, timeString) {
-                // 1. Vizual: scoatem selecția de pe celelalte și o punem pe asta
+                
                 document.querySelectorAll('.time-slot-btn').forEach(b => b.classList.remove('selected'));
                 btnElement.classList.add('selected');
 
-                // 2. Logic: Combinăm Ziua + Ora și o punem în input-ul ascuns
-                const datePart = dateSelect.value; // "2024-01-20"
-                const fullDateTime = `${datePart}T${timeString}:00`; // "2024-01-20T09:30:00"
+                
+                const datePart = dateSelect.value; 
+                const fullDateTime = `${datePart}T${timeString}:00`; 
                 
                 finalInput.value = fullDateTime;
                 
-                // 3. Activăm butonul de submit
                 submitBtn.disabled = false;
             }
 
-            // Ascultăm schimbările la dată sau frizer
+            
             stylistSelect.addEventListener('change', loadTimeSlots);
             dateSelect.addEventListener('change', loadTimeSlots);
         });

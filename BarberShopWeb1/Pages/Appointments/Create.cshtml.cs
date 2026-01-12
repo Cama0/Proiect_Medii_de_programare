@@ -33,7 +33,7 @@ namespace BarberShopWeb1.Pages.Appointments
 
             if (User.IsInRole("Admin"))
             {
-                // Adminul primește lista de clienți
+                
                 ViewData["MemberID"] = new SelectList(_context.Member.Select(m => new { 
                     ID = m.ID, 
                     FullName = m.FirstName + " " + m.LastName 
@@ -76,16 +76,12 @@ namespace BarberShopWeb1.Pages.Appointments
 
         public async Task<IActionResult> OnPostAsync()
 {
-    // --- CAZUL 1: ADMIN ---
+    
     if (User.IsInRole("Admin"))
     {
-        // TRUCUL MAGIC: Ștergem toate erorile automate!
-        // (Asta rezolvă probleme gen "InputMember required" sau erori de formatare ascunse)
+        
         ModelState.Clear();
-
-        // Acum facem VALIDARE MANUALĂ doar pe ce ne interesează:
-
-        // 1. Verificăm Data
+        
         if (Appointment.Date == DateTime.MinValue)
         {
             ModelState.AddModelError("Appointment.Date", "Eroare: Data nu a fost selectată corect.");
@@ -94,14 +90,12 @@ namespace BarberShopWeb1.Pages.Appointments
         {
             ModelState.AddModelError("Appointment.Date", "Programările se fac doar 09:00 - 17:00.");
         }
-
-        // 2. Verificăm Clientul
+        
         if (Appointment.MemberID == 0)
         {
             ModelState.AddModelError("Appointment.MemberID", "Te rog selectează un client din listă.");
         }
-
-        // 3. Verificăm Conflictele (Suprapunerile)
+        
         if (ModelState.IsValid)
         {
             int duration = 30;
@@ -118,8 +112,7 @@ namespace BarberShopWeb1.Pages.Appointments
                 ModelState.AddModelError("Appointment.Date", $"Interval ocupat! Conflict la ora {conflict.Date.ToShortTimeString()}.");
             }
         }
-
-        // Dacă avem erori manuale, reîncărcăm pagina
+        
         if (!ModelState.IsValid)
         {
             ViewData["StylistID"] = new SelectList(_context.Stylist, "ID", "Name");
@@ -127,28 +120,24 @@ namespace BarberShopWeb1.Pages.Appointments
             ViewData["MemberID"] = new SelectList(_context.Member.Select(m => new { ID = m.ID, FullName = m.FirstName + " " + m.LastName }), "ID", "FullName");
             return Page();
         }
-
-        // SALVARE PENTRU ADMIN
+        
         _context.Appointment.Add(Appointment);
         await _context.SaveChangesAsync();
         return RedirectToPage("./Index");
     }
-
-    // --- CAZUL 2: CLIENT (Rămâne neschimbat, că el funcționa) ---
+    
     else 
     {
         ModelState.Remove("Appointment.Member");
         ModelState.Remove("Appointment.MemberID");
         ModelState.Remove("InputMember.Email");
-
-        // Validare Orar
+        
         var hour = Appointment.Date.Hour;
         if (hour < 9 || hour >= 17)
         {
             ModelState.AddModelError("Appointment.Date", "Programările se fac doar între orele 09:00 și 17:00.");
         }
-
-        // Validare Conflict
+        
         if (ModelState.IsValid)
         {
             int duration = 30;
@@ -161,8 +150,7 @@ namespace BarberShopWeb1.Pages.Appointments
 
             if (conflict != null) ModelState.AddModelError("Appointment.Date", $"Interval ocupat! Conflict cu ora {conflict.Date.ToShortTimeString()}.");
         }
-
-        // Logică Membru (Auto-Create)
+        
         var userEmail = User.Identity.Name;
         var member = await _context.Member.FirstOrDefaultAsync(m => m.Email == userEmail);
         if (member == null)

@@ -23,8 +23,7 @@ namespace BarberShopWeb1.Pages.Reviews
             {
                 return NotFound();
             }
-
-            // Aducem Review-ul împreună cu Clientul și Stilistul
+            
             Review = await _context.Review
                 .Include(r => r.Stylist)
                 .Include(r => r.Member)

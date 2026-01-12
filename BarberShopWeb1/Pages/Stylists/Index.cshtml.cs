@@ -23,7 +23,6 @@ namespace BarberShopWeb1.Pages.Stylists
 
         public async Task OnGetAsync()
         {
-            // Aducem Stiliștii ȘI (Include) Recenziile lor
             Stylist = await _context.Stylist
                 .Include(s => s.Reviews) 
                 .ToListAsync();

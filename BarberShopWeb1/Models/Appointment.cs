@@ -10,11 +10,11 @@ public class Appointment
     public DateTime Date { get; set; }
 
     public int? MemberID { get; set; }
-    public Member? Member { get; set; } // Navigare
+    public Member? Member { get; set; } 
 
     public int? StylistID { get; set; }
-    public Stylist? Stylist { get; set; } // Navigare
+    public Stylist? Stylist { get; set; } 
 
     public int? ServiceID { get; set; }
-    public Service? Service { get; set; } // Navigare
+    public Service? Service { get; set; } 
 }

@@ -14,7 +14,7 @@
     }
     .time-slot-btn:hover { background-color: #f8f9fa; border-color: #d4af37; }
     .time-slot-btn.selected { background-color: #d4af37; color: #000; border-color: #bfa145; }
-    .time-slot-btn.current-time { border: 2px dashed #d4af37; background-color: #fff8e1; } /* Stil pt ora curentă */
+    .time-slot-btn.current-time { border: 2px dashed #d4af37; background-color: #fff8e1; } 
 </style>
 
 <div class="container mt-4">
@@ -80,8 +80,7 @@
             const dateSelect = document.getElementById('dateSelect');
             const slotsContainer = document.getElementById('timeSlotsContainer');
             const finalInput = document.getElementById('finalDateTime');
-
-            // Data și Ora originale ale programării (pentru a le evidenția)
+            
             const originalDateFull = "@Model.Appointment.Date.ToString("yyyy-MM-ddTHH:mm:00")";
             const originalTime = "@Model.Appointment.Date.ToString("HH:mm")";
 
@@ -95,9 +94,6 @@
                     .then(data => {
                         slotsContainer.innerHTML = '';
                         
-                        // Dacă suntem pe data originală, adăugăm manual ora originală în listă (chiar dacă e ocupată de noi)
-                        // Backend-ul a exclus deja ID-ul curent, deci ar trebui să vină liberă, 
-                        // dar ne asigurăm vizual.
                         
                         if (data.length === 0) {
                             slotsContainer.innerHTML = '<div class="text-danger">Nicio oră liberă.</div>';
@@ -106,8 +102,7 @@
                                 const btn = document.createElement('div');
                                 btn.className = 'time-slot-btn';
                                 btn.textContent = time;
-
-                                // Dacă e chiar ora curentă selectată
+                                
                                 if (date === originalDateFull.split('T')[0] && time === originalTime) {
                                     btn.classList.add('selected');
                                     btn.innerHTML += ' (Ora Curentă)';
@@ -124,7 +119,7 @@
                     });
             }
 
-            // Încărcăm orele imediat ce intrăm pe pagină
+            
             loadTimeSlots();
 
             stylistSelect.addEventListener('change', loadTimeSlots);

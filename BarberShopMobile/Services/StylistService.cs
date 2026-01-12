@@ -14,11 +14,8 @@ namespace BarberShopMobile.Services
 
         public async Task<List<Stylist>> GetStylists()
         {
-            // --- IMPORTANT ---
-            // Înlocuiește 5056 cu PORTUL pe care l-ai văzut în consola din Rider!
             string port = "5213"; 
             
-            // Pentru Simulatorul iOS, 'localhost' este corect
             string url = $"http://localhost:{port}/api/stylists";
 
             try
@@ -51,7 +48,7 @@ namespace BarberShopMobile.Services
     }
         public async Task<string> SaveAppointment(AppointmentRequest appointment)
 {
-    string port = "5213"; // Verifică portul tău!
+    string port = "5213";
     string url = $"http://127.0.0.1:{port}/api/appointments";
 
     try
@@ -64,7 +61,6 @@ namespace BarberShopMobile.Services
         }
         else
         {
-            // Citim mesajul de eroare trimis de server (ex: "Acest interval orar este deja ocupat")
             string errorMsg = await response.Content.ReadAsStringAsync();
             return errorMsg; 
         }

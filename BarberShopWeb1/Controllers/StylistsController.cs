@@ -19,7 +19,6 @@ namespace BarberShopWeb1.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Stylist>>> GetStylists()
         {
-            // Returnăm lista de stiliști direct din baza de date
             return await _context.Stylist.ToListAsync();
         }
     }
