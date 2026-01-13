@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BarberShopMobile.MyAppointmentsPage"
+             BackgroundColor="#1e1e1e"
+             Title="Istoric">
+
+    <CollectionView x:Name="HistoryList" Margin="15">
+        <CollectionView.ItemTemplate>
+            <DataTemplate>
+                <Frame BackgroundColor="#2a2a2a" BorderColor="#555" CornerRadius="8" Margin="0,0,0,10" Padding="15">
+                    <Grid ColumnDefinitions="*, Auto"> <VerticalStackLayout Grid.Column="0" VerticalOptions="Center">
+        <Label Text="{Binding StylistName}" TextColor="#d4af37" FontAttributes="Bold" FontSize="18"/>
+        <Label Text="{Binding ServiceName}" TextColor="White" FontSize="14"/>
+        <Label Text="{Binding DisplayDate}" TextColor="#ccc" FontSize="12" Margin="0,5,0,0"/>
+    </VerticalStackLayout>
+    
+    <Button Grid.Column="1"
+            Text="Șterge"
+            BackgroundColor="#800000" 
+            TextColor="White"
+            FontSize="12"
+            HeightRequest="35"
+            WidthRequest="70"
+            Padding="0"
+            VerticalOptions="Center"
+            Clicked="OnDeleteClicked"
+            CommandParameter="{Binding ID}" /> 
+            </Grid>
+                </Frame>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+        
+        <CollectionView.EmptyView>
+            <Label Text="Nu ai nicio programare activă." 
+                   TextColor="Gray" 
+                   HorizontalOptions="Center" 
+                   VerticalOptions="Center" 
+                   Margin="0,50,0,0"/>
+        </CollectionView.EmptyView>
+    </CollectionView>
+
+</ContentPage>

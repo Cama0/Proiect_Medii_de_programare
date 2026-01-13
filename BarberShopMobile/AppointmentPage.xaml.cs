@@ -15,8 +15,28 @@ public partial class AppointmentPage : ContentPage
         _service = new StylistService();
 
         LabelStylistName.Text = stylist.Name;
-        
+
         LoadServices();
+        
+        GenerateTimeSlots();
+    }
+
+    private void GenerateTimeSlots()
+    {
+        var slots = new List<string>();
+        
+        TimeSpan startTime = new TimeSpan(9, 0, 0);
+
+        TimeSpan endTime = new TimeSpan(17, 0, 0); 
+
+        while (startTime < endTime)
+        {
+            slots.Add(startTime.ToString(@"hh\:mm"));
+            
+            startTime = startTime.Add(TimeSpan.FromMinutes(30));
+        }
+
+        PickerTimeSlot.ItemsSource = slots;
     }
 
     private async void LoadServices()
@@ -33,22 +53,24 @@ public partial class AppointmentPage : ContentPage
             return;
         }
 
-        TimeSpan time = PickerTime.Time;
-        if (time.Hours < 9 || time.Hours >= 17)
+        if (PickerService.SelectedItem == null)
         {
-            await DisplayAlert("Închis", "Programul nostru este 09:00 - 17:00.", "Am înțeles");
+            await DisplayAlert("Atenție", "Te rog selectează un serviciu.", "OK");
             return;
         }
 
-        if (PickerService.SelectedItem == null)
+        if (PickerTimeSlot.SelectedItem == null)
         {
-            await DisplayAlert("Atenție", "Te rog selectează un serviciu din listă.", "OK");
+            await DisplayAlert("Atenție", "Te rog alege o oră din listă.", "OK");
             return;
         }
+
+        string selectedTimeStr = (string)PickerTimeSlot.SelectedItem;
+        TimeSpan selectedTime = TimeSpan.Parse(selectedTimeStr);
 
         var selectedService = (Service)PickerService.SelectedItem;
 
-        DateTime fullDate = PickerDate.Date + time;
+        DateTime fullDate = PickerDate.Date + selectedTime;
 
         var appointment = new AppointmentRequest
         {
@@ -56,7 +78,6 @@ public partial class AppointmentPage : ContentPage
             ClientName = EntryName.Text,
             Phone = EntryPhone.Text,
             Date = fullDate,
-            
             ServiceID = selectedService.ID 
         };
 

@@ -35,5 +35,15 @@ namespace BarberShopMobile
 
             ((CollectionView)sender).SelectedItem = null;
         }
+
+		private async void OnMyHistoryClicked(object sender, EventArgs e)
+{
+    string phone = await DisplayPromptAsync("Verificare", "Introdu numărul de telefon:", "Caută", "Anulează", keyboard: Keyboard.Telephone);
+
+    if (!string.IsNullOrWhiteSpace(phone))
+    {
+        await Navigation.PushAsync(new MyAppointmentsPage(phone));
+    }
+}
     }
 }

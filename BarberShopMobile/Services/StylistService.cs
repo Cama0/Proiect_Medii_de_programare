@@ -70,5 +70,38 @@ namespace BarberShopMobile.Services
         return $"Eroare conexiune: {ex.Message}";
     }
 }
+    public async Task<List<AppointmentView>> GetMyAppointments(string phone)
+{
+    string port = "5213";
+    string url = $"http://127.0.0.1:{port}/api/appointments/my-appointments?phone={phone}";
+
+    try
+    {
+        var response = await _client.GetFromJsonAsync<List<AppointmentView>>(url);
+        return response ?? new List<AppointmentView>();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Eroare istoric: {ex.Message}");
+        return new List<AppointmentView>();
+    }
+}
+
+public async Task<bool> DeleteAppointment(int id)
+{
+    string port = "5213"; // Portul tău
+    string url = $"http://127.0.0.1:{port}/api/appointments/{id}";
+
+    try
+    {
+        var response = await _client.DeleteAsync(url);
+        return response.IsSuccessStatusCode;
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Eroare ștergere: {ex.Message}");
+        return false;
+    }
+}
     }
 }

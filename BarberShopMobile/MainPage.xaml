@@ -3,16 +3,30 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BarberShopMobile.MainPage"
              BackgroundColor="#1e1e1e"
-             Title="Barber Shop"> <Grid RowDefinitions="Auto, *">
+             Title="GENTLEMAN'S BARBER">
+
+    <Grid RowDefinitions="Auto, Auto, *">
+        
         <Label Text="Echipa Noastră"
+               Grid.Row="0"
                TextColor="#d4af37"
                FontSize="28"
                FontAttributes="Bold"
                HorizontalOptions="Center"
-               Margin="0,20,0,20" />
+               Margin="0,20,0,10" />
+
+        <Button Grid.Row="1"
+                Text="Vezi Programările Mele"
+                BackgroundColor="#333"
+                TextColor="White"
+                HeightRequest="45"
+                CornerRadius="8"
+                FontAttributes="Bold"
+                Margin="20,0,20,15"
+                Clicked="OnMyHistoryClicked"/>
 
         <CollectionView x:Name="StylistsList"
-                        Grid.Row="1"
+                        Grid.Row="2"
                         Margin="15"
                         SelectionMode="Single"
                         SelectionChanged="OnStylistSelected">
